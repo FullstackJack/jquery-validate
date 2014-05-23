@@ -1,8 +1,8 @@
-#jQuery Validate
+# jQuery Validate
 
 jQuery Validate is a live input validation plugin.
 
-###Supported Validation Types:
+### Supported Validation Types:
 - Phone
 - Numeric
 - ABA Bank Routing
@@ -12,7 +12,7 @@ jQuery Validate is a live input validation plugin.
 - Required
 - Date
 
-##Usage
+## Usage
 ```javascript
 $('input').validate( { type: 'required' } );
 ```
