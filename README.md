@@ -14,9 +14,12 @@ jQuery Validate is a live input validation plugin.
 
 ## Basic Usage
 
+#### HTML
 ```html
     <input type="text" id="first-name" />
 ```
+
+#### JavaScript
 ```javascript
 // Required Field
 $('#first-name').validate( { required: true } );
@@ -24,6 +27,7 @@ $('#first-name').validate( { required: true } );
 By default, the plugin will add CSS classes to the validated input. You can
 style these with CSS.
 
+#### CSS
 ```css
 .validate-success {
     border: 1px solid green;
@@ -36,16 +40,16 @@ style these with CSS.
 
 ## Callback
 
-###onDone
+### onDone
 ```javascript
-// JavaScript anonymous callback function after validation check.
+// JavaScript anonymous callback function after each validation check (keyup).
 $('first-name').validate( {
     required: true,
     onDone: function( result ){
         if( !result ){
             console.log("Cannot leave input blank.");
         } else {
-            console.log("You typed:"+$(this).val()+" .");
+            console.log("You typed: "+$(this).val()+".");
         }
     }
 });
