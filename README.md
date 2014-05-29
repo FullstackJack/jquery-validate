@@ -65,7 +65,7 @@ will return the result as a boolean.
 ### onDone: function( result )
 ```javascript
 // JavaScript anonymous callback function after each validation check (keyup).
-$('first-name').validate( {
+$('#first-name').validate( {
     required: true,
     onDone: function( result ){
         if( !result ){
