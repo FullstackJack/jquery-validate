@@ -12,7 +12,8 @@ jQuery Validate is a live input validation plugin.
 - Required
 - Date
 
-## Usage
+## Basic Usage
 ```javascript
+// Required Field
 $('input').validate( { type: 'required' } );
 ```

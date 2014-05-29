@@ -1,16 +1,14 @@
 /***************************
    jQuery Validate Plugin
    Author: Kyle Bedell
-   Version: 1.0.0
+   Version: 1.0.1
 ****************************/
 (function($){
 	$.fn.validate = function( options ){
 		var PLUGIN_TAG = 'jQuery Validate: ';
-		
+		console.log("hello");
 		var settings = $.extend({
-			type: null, /* Values: "phone","email","password","ABA", etc. */
-			phone: false,
-			email: false,
+			type: "string",
 			passwordOptions: {
 				uppercase: false,
 				lowercase: false,
@@ -21,6 +19,8 @@
 			},
 			onDone: null,
 			required: false,
+                        minLength: 0,
+                        maxLength: null,
 			match: null,
 			debug: false,
 			force: false
@@ -29,38 +29,46 @@
 		return this.each( function( idx, el ){
 			
 			var result;
+                        
+                        // Add a reference class.
+                        $(el).addClass('validate');
+                        
 			var init = function(){
-				
-				$value = $(this).val();
+                                
+                                var value;
+                                
+                                // Get the value of the input.
+				value = $(this).val();
+                                
 				// If the value is not blank.
-				if( $value != "" ){
-					if( settings.phone || settings.type == "phone" ){
+				if( value !== "" || value.length !== 0 ){
+					if( settings.type === "phone" ){
 						regex = new RegExp(/^(\()?[2-9]\d{2}(\))?(\s)*(-|)?(\s)*[2-9]\d{2}(\s)*(-|)?(\s)*\d{4}$/);
-						if( regex.test( $value ) ){
+						if( regex.test( value ) ){
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+' is a phone number.' );
+								console.log( PLUGIN_TAG+value+' is a phone number.' );
 							}
 							result = true;
 						} else {
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+" is not a valid phone number.");
+								console.log( PLUGIN_TAG+value+" is not a valid phone number.");
 							}
 							result = false;
 						}
-					} else if ( settings.email || settings.type == "email" ){
+					} else if ( settings.type === "email" ){
 						regex = new RegExp(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-						if( regex.test( $value ) ){
+						if( regex.test( value ) ){
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+' is a valid email address.' );
+								console.log( PLUGIN_TAG+value+' is a valid email address.' );
 							}
 							result = true;
 						} else {
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+" is not a valid email address.");
+								console.log( PLUGIN_TAG+value+" is not a valid email address.");
 							}
 							result = false;
-						}
-					} else if ( settings.type == "password" ){
+                                                }
+					} else if ( settings.type === "password" ){
 						// Start the regular expression.
 						regexString = "(^";
 						
@@ -103,29 +111,29 @@
 						regex = new RegExp( regexString );
 						
 						// Test the string.
-						if( regex.test( $value ) ){
+						if( regex.test( value ) ){
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+' is a valid password.' );
+								console.log( PLUGIN_TAG+value+' is a valid password.' );
 							}
 							result = true;
 						} else {
 							if( settings.debug ){
-								console.log( PLUGIN_TAG+$value+" is not a valid password.");
+								console.log( PLUGIN_TAG+value+" is not a valid password.");
 							}
 							result = false;
 						}
 					
-					} else if( settings.type == "date"){
+					} else if( settings.type === "date" ){
 						
 						var month,
-							day,
-							year,
-							date;
+                                                    day,
+                                                    year,
+                                                    date;
 							
-						date = $value.split('/');
+						date = value.split('/');
 						
 						if( settings.debug ){
-							console.log(PLUGIN_TAG+'Date ('+$value+')');
+							console.log( PLUGIN_TAG+'Date ('+value+')' );
 						}
 						
 						month = parseInt( date[0] );
@@ -135,11 +143,11 @@
 						if( month >= 1 && month <= 12 ){
 							if( day >= 1 && day <= 31 ){
 								if( year >= 1 && year <= new Date().getFullYear() ){
-									if ( (month==4 || month==6 || month==9 || month==11) && day ==31 ){
+									if ( (month===4 || month===6 || month===9 || month===11) && day === 31 ){
 										result = false;
-									} else if ( month == 2 ){
-										var isleap = (year % 4 == 0 && (year % 100 != 0 || year % 400 == 0));
-										if (day > 29 || (day ==29 && !isleap)){
+									} else if ( month === 2 ){
+										var isleap = (year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0));
+										if (day > 29 || (day ===29 && !isleap)){
 											result = false;
 										} else {
 											result = true;
@@ -150,62 +158,85 @@
 								}
 							}
 						}			
-
-					} else if( settings.type == "ABA" ){
+					} else if( settings.type === "ABA" ){
 					
-						// Run through each digit and calculate the total.
-						n = 0;
-						for (i = 0; i < $value.length; i += 3) {
-							n += parseInt( $value.charAt(i), 10 ) * 3
-							+  parseInt( $value.charAt(i + 1), 10) * 7
-							+  parseInt( $value.charAt(i + 2), 10);
-						}
+                                            // Run through each digit and calculate the total.
+                                            n = 0;
+                                            for (i = 0; i < value.length; i += 3) {
+                                                    n += parseInt( value.charAt(i), 10 ) * 3
+                                                    +  parseInt( value.charAt(i + 1), 10) * 7
+                                                    +  parseInt( value.charAt(i + 2), 10);
+                                            }
 
-						// If the resulting sum is an even multiple of ten (but not zero),
-						// the aba routing number is good.
-						if (n != 0 && n % 10 == 0){
-							result = true;
-						} else {
-							result = false;
-						}
-					} else if( settings.type == "number" ){
-						result = new RegExp( /^\d+$/ ).test( $value );
-					}
-				} else {
-					result = false;
+                                            // If the resulting sum is an even multiple of ten (but not zero),
+                                            // the aba routing number is good.
+                                            if (n !== 0 && n % 10 === 0){
+                                                    result = true;
+                                            } else {
+                                                    result = false;
+                                            }
+					} else if( settings.type === "number" ){
+                                                result = new RegExp( /^\d+$/ ).test( value );
+					} else if( settings.type === "string" ){
+                                                if( typeof value === "string" ){
+                                                    result = true;
+                                                } else {
+                                                    result = false;
+                                                }
+                                        } else {
+                                            if( settings.debug ){
+                                                console.warn(PLUGIN_TAG+"Validation type not recognized.");
+                                            }
+                                        }
+                                } else {
+                                    result = false;
 				}
 				
 				// Is this a required field?
 				if( settings.required ){
-					// Perform a simple empty string check.
-					if( $value == "" ){
+					// Perform an empty string check.
+					if( value === "" || value === 0 ){
 						result = false;
 					} else {
 						result = true;
 					}
 				}
-				
+                                
+                                // Does the value exceed maximum length?
+                                if( settings.maxLength !== null ){
+                                        if( value.length > settings.maxLength ){
+                                            result = false;
+                                        }
+                                }
+                                
+                                // Is the string shorter than the minimum length? 
+				if( settings.minLength !== null ){
+                                        if( value.length < settings.minLength ){
+                                            result = false;
+                                        }
+                                }
+                                
 				// If the value needs to match a second input's value.
 				if( settings.match ){
 					
 					// If the parameter is a jQuery object...
 					if( settings.match instanceof jQuery ){
 						// Check the value for a match.
-						if( settings.match.val() != "" ){
-							if( $value == settings.match.val() ){
+						if( settings.match.val() !== "" ){
+							if( value === settings.match.val() ){
 								result = true;
 							} else {
 								result = false;
 							}
 						}
 					// Else, if we have a CSS selector string...
-					} else if( typeof settings.match === 'string' ){
+					} else if( typeof settings.match === "string" ){
 						console.log( "String" );
 						// If the CSS selector string is not empty.
-						if( settings.match != "" ){
-							if( $( settings.match ).val() != "" ){
+						if( settings.match !== "" ){
+							if( $( settings.match ).val() !== "" ){
 								// Get the jQuery object of the CSS selector string and test.
-								if( $value == $( settings.match ).val() ){
+								if( value === $( settings.match ).val() ){
 									result = true;
 								} else {
 									result = false;
@@ -216,29 +247,37 @@
 						}
 					}
 				}
+                                
+                                // Update CSS classes.
+                                if( !result ){
+                                    // Add error class.
+                                    $( el ).addClass('validate-error');
+                                    // Remove success class.
+                                    $( el ).removeClass('validate-success');
+                                } else {
+                                    // Add success class.
+                                    $( el ).removeClass('validate-error');
+                                    // Remove error class.
+                                    $( el ).addClass('validate-success');
+                                }
 				
 				// Callback when done.
-				if( typeof settings.onDone == "function" ){
+				if( typeof settings.onDone === "function" ){
 					settings.onDone.call( this, result );
 					// Return the jQuery object for chaining.
 					return this;
 				}
-			}
+			};
 			
 			// Add keyup tests.
-			$( el ).on('keyup', function( e ){
+			$( el ).on('keyup', function(){
 				init.call( this );
 			});
 			
 			if( settings.force ){
 				// Run initial test.
 				init.call( this );
-			}
-			
-			
-			// Fall back for older version of plugin.
-			return result;
-				
+			}	
 		});
-	}
+	};
 })(jQuery);
