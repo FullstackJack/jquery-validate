@@ -6,7 +6,7 @@
 (function($){
 	$.fn.validate = function( options ){
 		var PLUGIN_TAG = 'jQuery Validate: ';
-		console.log("hello");
+
 		var settings = $.extend({
 			type: "string",
 			passwordOptions: {
@@ -30,14 +30,13 @@
 			
 			var result;
                         
-                        // Add a reference class.
-                        $(el).addClass('validate');
+			// Add a reference class.
+			$(el).addClass('validate');
                         
 			var init = function(){
+				var value;
                                 
-                                var value;
-                                
-                                // Get the value of the input.
+				// Get the value of the input.
 				value = $(this).val();
                                 
 				// If the value is not blank.
@@ -67,7 +66,7 @@
 								console.log( PLUGIN_TAG+value+" is not a valid email address.");
 							}
 							result = false;
-                                                }
+						}
 					} else if ( settings.type === "password" ){
 						// Start the regular expression.
 						regexString = "(^";
@@ -126,9 +125,9 @@
 					} else if( settings.type === "date" ){
 						
 						var month,
-                                                    day,
-                                                    year,
-                                                    date;
+							day,
+							year,
+							date;
 							
 						date = value.split('/');
 						
@@ -159,37 +158,36 @@
 							}
 						}			
 					} else if( settings.type === "ABA" ){
-					
-                                            // Run through each digit and calculate the total.
-                                            n = 0;
-                                            for (i = 0; i < value.length; i += 3) {
-                                                    n += parseInt( value.charAt(i), 10 ) * 3
-                                                    +  parseInt( value.charAt(i + 1), 10) * 7
-                                                    +  parseInt( value.charAt(i + 2), 10);
-                                            }
+						// Run through each digit and calculate the total.
+						n = 0;
+						for (i = 0; i < value.length; i += 3) {
+								n += parseInt( value.charAt(i), 10 ) * 3
+								+  parseInt( value.charAt(i + 1), 10) * 7
+								+  parseInt( value.charAt(i + 2), 10);
+						}
 
-                                            // If the resulting sum is an even multiple of ten (but not zero),
-                                            // the aba routing number is good.
-                                            if (n !== 0 && n % 10 === 0){
-                                                    result = true;
-                                            } else {
-                                                    result = false;
-                                            }
+						// If the resulting sum is an even multiple of ten (but not zero),
+						// the aba routing number is good.
+						if (n !== 0 && n % 10 === 0){
+								result = true;
+						} else {
+								result = false;
+						}
 					} else if( settings.type === "number" ){
-                                                result = new RegExp( /^\d+$/ ).test( value );
+						result = new RegExp( /^\d+$/ ).test( value );
 					} else if( settings.type === "string" ){
-                                                if( typeof value === "string" ){
-                                                    result = true;
-                                                } else {
-                                                    result = false;
-                                                }
-                                        } else {
-                                            if( settings.debug ){
-                                                console.warn(PLUGIN_TAG+"Validation type not recognized.");
-                                            }
-                                        }
-                                } else {
-                                    result = false;
+						if( typeof value === "string" ){
+							result = true;
+						} else {
+							result = false;
+						}
+                    } else {
+						if( settings.debug ){
+							console.warn(PLUGIN_TAG+"Validation type not recognized.");
+						}
+					}
+				} else {
+					result = false;
 				}
 				
 				// Is this a required field?
@@ -248,18 +246,18 @@
 					}
 				}
                                 
-                                // Update CSS classes.
-                                if( !result ){
-                                    // Add error class.
-                                    $( el ).addClass('validate-error');
-                                    // Remove success class.
-                                    $( el ).removeClass('validate-success');
-                                } else {
-                                    // Add success class.
-                                    $( el ).removeClass('validate-error');
-                                    // Remove error class.
-                                    $( el ).addClass('validate-success');
-                                }
+				// Update CSS classes.
+				if( !result ){
+					// Add error class.
+					$( el ).addClass('validate-error');
+					// Remove success class.
+					$( el ).removeClass('validate-success');
+				} else {
+					// Add success class.
+					$( el ).removeClass('validate-error');
+					// Remove error class.
+					$( el ).addClass('validate-success');
+				}
 				
 				// Callback when done.
 				if( typeof settings.onDone === "function" ){

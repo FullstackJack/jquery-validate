@@ -1,13 +1,29 @@
-v 1.0.1
+#Change Log
 
-    - Added default validation type of "string".
+## [Unreleased]
 
-    - Added minimum length and maximum length to validation options.
+	- Cleaned up code and fixed indentation.
+
+## [1.0.1] 2015-10-22
+### Added
+
+    - Default validation type of "string".
+
+    - Minimum length and maximum length to validation options.
+	
+	- Base CSS class to signify that the input is being validated.
+	
+	- CSS classes for failed and successful validations.
+	
+### Changed
 
     - Removed old return statements in favor of onDone callback.
 
-    - Replaces variables and cleaned up code.
-
-    - Added base CSS class to signify that the input is being validated.
-
-    - Added CSS classes for failed and successful validations.
+    - Replaced variables and cleaned up code.
+	
+## [1.0.0]
+### Added
+	
+	- Input validations.
+	
+	- Created jQuery plugin scaffolding.
