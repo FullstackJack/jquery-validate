@@ -1,4 +1,5 @@
 v 1.0.1
+
     - Added default validation type of "string".
 
     - Added minimum length and maximum length to validation options.
